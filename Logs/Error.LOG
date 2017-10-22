@@ -1,0 +1,7 @@
+
+Fatal Error in Converter: 
+Error: Alias 'S7566287' is not found.
+Error Number: 13
+Method: writeresult
+Offending Code: SELECT ...
+File being processed: d:\nitesh\23\form\frmlogin1.frx

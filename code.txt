@@ -1,0 +1,7 @@
+NO Spaces
+
+Private Sub txtPassword_KeyPress(KeyAscii As Integer)
+If (Right(txtPassword.Text, 1) = " " And KeyAscii = 32) Then
+    KeyAscii = 0
+End If
+End Sub

@@ -1,0 +1,53 @@
+Dim user As String
+'Dim name As String
+Dim rstUser As New ADODB.Recordset
+Private Sub reset()
+    txtNew.Text = Empty
+    txtConfirm.Text = Empty
+    txtNew.SetFocus
+End Sub
+Private Sub cmdexit_Close()
+    Unload Me
+End Sub
+
+Private Sub cmdClear_Click()
+    txtOld.Text = Empty
+    txtNew.Text = Empty
+    txtConfirm.Text = Empty
+    txtOld.SetFocus
+End Sub
+
+Private Sub cmdClose_Click()
+    Unload Me
+End Sub
+
+Private Sub cmdsave_Click()
+    If rstUser.Fields(0).Value = txtOld.Text Then
+            If Len(txtNew.Text) >= 6 Then
+                If txtNew.Text = txtConfirm.Text Then
+                    rstUser.Fields(0).Value = txtNew.Text
+                    rstUser.Update
+                    MsgBox "Password Sucessfully Changed"
+                    Exit Sub
+                Else
+                    MsgBox "Incorrect Confirm Password"
+                    reset
+                End If
+            Else
+                MsgBox "Password must be atleast 6 Character"
+                reset
+            End If
+    Else
+        MsgBox "Incorrect Old Password"
+        cmdClear_Click
+    End If
+End Sub
+
+Private Sub Form_Load()
+    user = frmLogin.txtUsername.Text
+    user = StrConv(user, vbProperCase)
+    
+    frmUser.Caption = frmUser.Caption + user
+    rstUser.Open "select password from users where user_name='" & frmLogin.txtUsername & "'", cnn, adOpenKeyset, adLockOptimistic
+End Sub
+

@@ -1,0 +1,96 @@
+Option Explicit
+Private rstlogin As New ADODB.Recordset
+Private i As Byte
+
+Private Sub reset()
+    txtPassword.Text = Empty
+    txtUsername.Text = Empty
+    cmdCancel.Enabled = False
+    txtUsername.SetFocus
+End Sub
+
+Private Sub cmdcancel_Click()
+    reset
+End Sub
+
+Private Sub cmdexit_Click()
+    If (MsgBox("Do you want to exit ?", vbYesNo + vbDefaultButton2 + vbExclamation, "Confirm") = vbYes) Then
+        End
+    End If
+End Sub
+
+Private Sub cmdLogin_Click()
+    If rstlogin.State = adStateOpen Then rstlogin.Close
+        If (Len(txtUsername.Text) > 4) Or (Len(txtPassword.Text) > 4) Then
+            rstlogin.Open "select password from users where user_name = '" & txtUsername.Text & "'", cnn, adOpenKeyset, adLockOptimistic
+               If (rstlogin.Fields(0).Value = txtPassword.Text) Then
+                    frmLogin.BorderStyle = 0
+                    frmLogin.Height = frmLogin.Height + 700
+                    lblStatus.Visible = True
+                    ProgressBar1.Visible = True
+                    Timer1.Enabled = True
+                    Timer1.Interval = 200
+                    cmdCancel.Enabled = False
+                    cmdExit.Enabled = False
+                    cmdLogin.Enabled = False
+                    Exit Sub
+                End If
+        End If
+    MsgBox "Invalid User or Password"
+    reset
+End Sub
+
+Private Sub Form_Activate()
+    lblStatus.Visible = False
+    ProgressBar1.Visible = False
+    txtPassword.Enabled = False
+End Sub
+Private Sub Form_Unload(Cancel As Integer)
+    rstlogin.Close
+End Sub
+
+Private Sub Timer1_Timer()
+    ProgressBar1.Value = i
+    i = i + 10
+    lblStatus.Caption = i & "%"
+    If i = 100 Then
+        Timer1.Enabled = False
+        Dim rstTemp As New ADODB.Recordset
+       ' rstTemp.Open "select user_name from users where user_name = '" & txtUsername.Text) & "'", cnn, adOpenKeyset, adLockOptimistic
+        If LCase(txtUsername.Text) = "admin" Then
+                admin.Show
+            Else
+                frmUser.Show
+            End If
+            Unload Me
+    End If
+    
+End Sub
+
+Private Sub txtPassword_Change()
+    If txtPassword.Text = Empty Then
+        cmdCancel.Enabled = False
+        cmdLogin.Enabled = False
+    Else
+        cmdCancel.Enabled = True
+        cmdLogin.Enabled = True
+    End If
+End Sub
+
+Private Sub txtUsername_Change()
+    If txtUsername.Text = Empty Then
+        cmdCancel.Enabled = False
+        txtPassword.Enabled = False
+    Else
+        cmdCancel.Enabled = True
+        txtPassword.Enabled = True
+    End If
+End Sub
+
+Private Sub txtusername_KeyPress(KeyAscii As Integer)
+    
+    If (Not (KeyAscii = 8 Or (KeyAscii >= 65 And KeyAscii <= 90) Or (KeyAscii >= 97 And KeyAscii <= 122) Or (KeyAscii >= 47 And KeyAscii <= 58) Or KeyAscii = 95)) Then
+        KeyAscii = 0
+    End If
+End Sub
+

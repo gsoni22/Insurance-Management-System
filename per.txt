@@ -1,0 +1,6 @@
+Private Sub usergrid_Click()
+    rstadmin.Open "select user_name from user", cnn, adOpenKeyset, adLockOptimistic
+    usergrid.Clear
+    usergrid.Row = 2
+    usergrid.Col = rstadmin.Fields.Count
+End Sub

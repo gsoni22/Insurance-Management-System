@@ -1,0 +1,21 @@
+Public LoginSucceeded As Boolean
+
+Private Sub cmdCancel_Click()
+    LoginSucceeded = False
+    Me.Hide
+End Sub
+
+Private Sub cmdOK_Click()
+    'check for correct password
+    If txtPassword = "password" Then
+        'place code to here to pass the
+        'success to the calling sub
+        'setting a global var is the easiest
+        LoginSucceeded = True
+        Me.Hide
+    Else
+        MsgBox "Invalid Password, try again!", , "Login"
+        txtPassword.SetFocus
+        SendKeys "{Home}+{End}"
+    End If
+End Sub
